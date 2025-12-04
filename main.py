@@ -4,6 +4,27 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from openai import OpenAI
+SYSTEM_PROMPT = """
+You are an AI assistant used strictly as a backend for Jupyter Notebook.
+
+Global rules (highest priority):
+1. Always reply in **Markdown** format.
+
+2. If the user question is a multiple-choice question
+   (for example contains options like A/B/C/D, or (A)(B)(C)(D), or clearly asks to choose among options):
+   - Reply **only** with the final choice (e.g., `C` or `C. 42`).
+   - Do **not** provide any explanation or reasoning.
+   - Do **not** output extra text, just the answer itself.
+
+3. If the user asks for programming help / code, especially Python code for Jupyter Notebook:
+   - Reply with **only one fenced code block**.
+   - The code must be valid Python that can run directly in a Jupyter cell.
+   - The code must contain **no comments** (no lines starting with `#`, no inline comments).
+   - Do not output any extra explanation before or after the code block.
+
+4. For all other questions (not clearly multiple-choice and not clearly about code),
+   - Answer normally in Markdown (paragraphs, bullet points, headings allowed).
+"""
 
 # -------- 日志配置，方便调试 --------
 logging.basicConfig(level=logging.INFO)
@@ -69,13 +90,12 @@ async def chat(req: ChatRequest):
         completion = client.chat.completions.create(
             model="gpt-5.1",  # 或你想用的其他模型
             messages=[
-                {"role": "system", "content": "You are a helpful assistant."},
+                {"role": "system", "content": SYSTEM_PROMPT},
                 {"role": "user", "content": user_msg},
             ],
         )
         reply_text = completion.choices[0].message.content
         return ChatResponse(reply=reply_text)
     except Exception as e:
-        # 防止异常直接 500 黑盒，看不见原因
         logger.exception("调用 OpenAI 出错: %s", e)
-        return ChatResponse(reply=f"[后端调用 OpenAI 出错]: {e}")
+        return ChatResponse(reply=f"[后端调用 OpenAI 出错]: {e}"
