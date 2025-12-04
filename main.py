@@ -4,6 +4,12 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from openai import OpenAI
+
+# -------- 日志配置 --------
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
+
+# -------- Jupyter 专用系统提示 --------
 SYSTEM_PROMPT = """
 You are an AI assistant used strictly as a backend for Jupyter Notebook.
 
@@ -26,17 +32,10 @@ Global rules (highest priority):
    - Answer normally in Markdown (paragraphs, bullet points, headings allowed).
 """
 
-# -------- 日志配置，方便调试 --------
-logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger(__name__)
-
-# -------- 读取并清洗 OPENAI_API_KEY --------
+# -------- 读取并清洗 API Key --------
 raw_key = os.environ.get("OPENAI_API_KEY", "")
-
-# 打印 repr，确认到底有没有奇怪字符（只在启动时打一次）
 logger.info("RAW OPENAI_API_KEY repr: %r", raw_key)
 
-# 去掉前后空白 + 所有换行符，防止 header 里非法字符
 OPENAI_API_KEY = raw_key.strip().replace("\n", "").replace("\r", "")
 
 if not OPENAI_API_KEY:
@@ -45,17 +44,15 @@ if not OPENAI_API_KEY:
 if OPENAI_API_KEY != raw_key:
     logger.warning("OPENAI_API_KEY 中包含空白/换行，已在代码中自动清理。")
 
-# -------- 创建 OpenAI 客户端 --------
 client = OpenAI(api_key=OPENAI_API_KEY)
 
 # -------- FastAPI 初始化 --------
 app = FastAPI(title="Simple Chat Backend")
 
-# 允许的前端来源（开发阶段可以用 "*"，上线后建议改成你自己的域名）
 allowed_origins = [
     "http://localhost",
     "http://127.0.0.1",
-    "*",  # 调试阶段先放开
+    "*",  # 调试阶段先放开，之后可以换成你的前端域名
 ]
 
 app.add_middleware(
@@ -88,7 +85,7 @@ async def chat(req: ChatRequest):
 
     try:
         completion = client.chat.completions.create(
-            model="gpt-5.1",  # 或你想用的其他模型
+            model="gpt-5.1",  # 或其他模型
             messages=[
                 {"role": "system", "content": SYSTEM_PROMPT},
                 {"role": "user", "content": user_msg},
@@ -98,4 +95,4 @@ async def chat(req: ChatRequest):
         return ChatResponse(reply=reply_text)
     except Exception as e:
         logger.exception("调用 OpenAI 出错: %s", e)
-        return ChatResponse(reply=f"[后端调用 OpenAI 出错]: {e}"
+        return ChatResponse(reply=f"[后端调用 OpenAI 出错]: {e}")
