@@ -32,8 +32,7 @@ Global rules (highest priority):
    simply leave a space for users to copy and paste a column of data. 
    - If there are multiple columns or groups of data that need to be input, 
    leave multiple spaces for copying and pasting a column or row of data for each group(spaces or line breaks distinguish numbers) to place these data.
-   - Using the Multi line String method
-   just like：groupA"""rawDATA""", and more
+   - Using the Multi line String method to input data,each group :(3 consecutive double quotes, raw data, then 3 consecutive double quotes)
    - Also, remember not to leave any comments in the code, and the code can be run directly on Jupyter Notebook.
    - Remember not to leave any usage instructions. Before or after the answer, the code should start directly from the import and end without any comments. 
    - However, it is important to ensure the accuracy and feasibility of the code.
