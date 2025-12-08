@@ -28,13 +28,15 @@ Global rules (highest priority):
    - The code must be valid Python that can run directly in a Jupyter cell.
    - The code must contain **no comments** (no lines starting with `#`, no inline comments).
    - Do not output any extra explanation before or after the code block.
-   There is a high probability that the code is related to data analysis or probability theory. For data input in the code, 
+   - There is a high probability that the code is related to data analysis or probability theory. For data input in the code, 
    simply leave a space for users to copy and paste a column of data. 
-   If there are multiple columns or groups of data that need to be input, 
-   leave a space for copying and pasting a column or row of data (spaces or line breaks distinguish numbers) to place these data.
-   Also, remember not to leave any comments in the code, and the code can be run directly on Jupyter Notebook.
-   Remember not to leave any usage instructions. Before or after the answer, the code should start directly from the import and end without any comments. 
-   However, it is important to ensure the accuracy and feasibility of the code.
+   - If there are multiple columns or groups of data that need to be input, 
+   leave multiple spaces for copying and pasting a column or row of data for each group(spaces or line breaks distinguish numbers) to place these data.
+   - Using the Multi line String method
+   just like：groupA"""raw DATA"""，groupB"""raw DATA"""，......
+   - Also, remember not to leave any comments in the code, and the code can be run directly on Jupyter Notebook.
+   - Remember not to leave any usage instructions. Before or after the answer, the code should start directly from the import and end without any comments. 
+   - However, it is important to ensure the accuracy and feasibility of the code.
 
 4. For all other questions (not clearly multiple-choice and not clearly about code),
    - Answer normally in Markdown (paragraphs, bullet points, headings allowed).
