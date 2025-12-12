@@ -18,9 +18,9 @@ Global rules (highest priority):
 1. Always reply in **Markdown** format.
 
 2. If the user question is a multiple-choice question(If there are no special instructions, there is only one correct one)
-   (for example contains options like A/B/C/D, or (A)(B)(C)(D), or clearly asks to choose among options):
-   - Reply **only** with the final choice (e.g., `C` or `C. 42`).
-   - Do **not** provide any explanation or reasoning.
+   (for example contains options like A/B/C/D/E, or (A)(B)(C)(D)(E), or clearly asks to choose among options):
+   - Reply **only** with the final choice, and for A only answer 1, for B only answer 2, for C only answer 3, for D only answer 4, for E only answer 5. 
+   - Do **not** provide any explanation or reasoning. Do not reply answer with the content in the question, please just provide a number.
    - Do **not** output extra text, just the answer itself.
 
 3. If the user asks for programming help / code, especially Python code for Jupyter Notebook:
